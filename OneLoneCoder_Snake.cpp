@@ -79,33 +79,31 @@ int main()
 		int nScore = 0;
 		int nSnakeDirection = 3;
 		bool bDead = false;
-		bool bKeyLeft = false, bKeyRight = false, bKeyLeftOld = false, bKeyRightOld = false;
+		bool bKeyLeft = false, bKeyRight = false, bKeyUp = false, bKeyDown = false, bKeyLeftOld = false, bKeyRightOld = false, bKeyUpOld = false, bKeyDownOld = false;
 
 		while (!bDead)
 		{
 			// Frame Timing, compensate for aspect ratio of command line
 			auto t1 = chrono::system_clock::now();
-			while ((chrono::system_clock::now() - t1) < ((nSnakeDirection % 2 == 1) ? 120ms : 200ms))
-			{
-				// Get Input, 
+			while ((chrono::system_clock::now() - t1) < ((nSnakeDirection % 2 == 1) ? 120ms : 200ms)) {
+				bKeyDown = (0x8000 & GetAsyncKeyState((unsigned char)('\x28'))) != 0;
 				bKeyRight = (0x8000 & GetAsyncKeyState((unsigned char)('\x27'))) != 0;
+				bKeyUp = (0x8000 & GetAsyncKeyState((unsigned char)('\x26'))) != 0;
 				bKeyLeft = (0x8000 & GetAsyncKeyState((unsigned char)('\x25'))) != 0;
 
-				if (bKeyRight && !bKeyRightOld)
-				{
-					nSnakeDirection++;
-					if (nSnakeDirection == 4) nSnakeDirection = 0;
-				}
+				if (bKeyUp && !bKeyUpOld) nSnakeDirection = 0;
 
-				if (bKeyLeft && !bKeyLeftOld)
-				{
-					nSnakeDirection--;
-					if (nSnakeDirection == -1) nSnakeDirection = 3;
-				}
+				if (bKeyRight && !bKeyRightOld) nSnakeDirection = 1;
+
+				if (bKeyDown && !bKeyDownOld) nSnakeDirection = 2;
+
+				if (bKeyLeft && !bKeyLeftOld) nSnakeDirection = 3;
 
 				bKeyRightOld = bKeyRight;
 				bKeyLeftOld = bKeyLeft;
-			}
+				bKeyUpOld = bKeyUp;
+				bKeyDownOld = bKeyDown;
+			    }
 
 			// ==== Logic
 
